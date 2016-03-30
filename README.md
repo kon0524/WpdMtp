@@ -17,3 +17,6 @@ RICOH THETA Sなどのカメラを操作することができます。
 #### その他
 実装には下記サイトをものすご～く参考にさせていただきました。  
 https://blogs.msdn.microsoft.com/dimeby8/tag/wpd/
+
+## License
+MIT
