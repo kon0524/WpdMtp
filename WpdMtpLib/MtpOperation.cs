@@ -96,7 +96,7 @@ namespace WpdMtpLib
             uint[] responseParam;
 
             // MTPコマンドとパラメータを構築する
-            IPortableDeviceValues mtpCommand = createMtpCommand(code, WpdProperty.WPD_COMMAND_MTP_EXT_EXECUTE_COMMAND_WITH_DATA_TO_READ);
+            IPortableDeviceValues mtpCommand = createMtpCommand(code, WpdProperty.WPD_COMMAND_MTP_EXT_EXECUTE_COMMAND_WITHOUT_DATA_PHASE);
             IPortableDevicePropVariantCollection mtpCommandParam = null;
             if (param != null)
             {
