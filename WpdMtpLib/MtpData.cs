@@ -52,6 +52,20 @@ namespace WpdMtpLib
             public string SerialNumber;
         }
 
+        /// <summary>
+        /// StorageInfo構造体
+        /// </summary>
+        public struct StorageInfo
+        {
+            public ushort StorageType;
+            public ushort FilesystemType;
+            public ushort AccessCapability;
+            public ulong MaxCapacity;
+            public ulong FreeSpaceInBytes;
+            public uint FreeSpaceInObjects;
+            public string StorageDescription;
+            public string VolumeIdentifier;
+        }
 
         /// <summary>
         /// MtpResponseからuint型の配列を取得します
@@ -129,6 +143,7 @@ namespace WpdMtpLib
         {
             int pos = 0;
             DeviceInfo deviceInfo = new DeviceInfo();
+            if (response.ResponseCode != MtpResponseCode.OK || response.Data == null) { return deviceInfo; }
 
             deviceInfo.StandardVersion = BitConverter.ToUInt16(response.Data, pos); pos += 2;
             deviceInfo.MtpVenderExtensionID = BitConverter.ToUInt32(response.Data, pos); pos += 4;
@@ -146,6 +161,24 @@ namespace WpdMtpLib
             deviceInfo.SerialNumber = getString(response.Data, ref pos);
 
             return deviceInfo;
+        }
+
+        public static StorageInfo GetStorageInfoDataset(MtpResponse response)
+        {
+            int pos = 0;
+            StorageInfo storageInfo = new StorageInfo();
+            if (response.ResponseCode != MtpResponseCode.OK || response.Data == null) { return storageInfo; }
+
+            storageInfo.StorageType = BitConverter.ToUInt16(response.Data, pos); pos += 2;
+            storageInfo.FilesystemType = BitConverter.ToUInt16(response.Data, pos); pos += 2;
+            storageInfo.AccessCapability = BitConverter.ToUInt16(response.Data, pos); pos += 2;
+            storageInfo.MaxCapacity = BitConverter.ToUInt64(response.Data, pos); pos += 8;
+            storageInfo.FreeSpaceInBytes = BitConverter.ToUInt64(response.Data, pos); pos += 8;
+            storageInfo.FreeSpaceInObjects = BitConverter.ToUInt32(response.Data, pos); pos += 4;
+            storageInfo.StorageDescription = getString(response.Data, ref pos);
+            storageInfo.VolumeIdentifier = getString(response.Data, ref pos);
+
+            return storageInfo;
         }
 
         /// <summary>

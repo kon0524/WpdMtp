@@ -25,6 +25,10 @@ namespace Test
             res = command.Execute(MtpOperationCode.GetStorageIDs, null, null);
             uint[] storageIds = MtpData.GetUInt32Array(res);
 
+            // ストレージ情報をとる
+            res = command.Execute(MtpOperationCode.GetStorageInfo, new uint[1] { storageIds[0] }, null);
+            MtpData.StorageInfo storageInfo = MtpData.GetStorageInfoDataset(res);
+
             // オブジェクト数をとる
             res = command.Execute(MtpOperationCode.GetNumObjects, new uint[3] { storageIds[0], 0, 0 }, null);
             uint num = res.Parameter1;
