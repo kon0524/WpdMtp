@@ -7,6 +7,11 @@ namespace WpdMtpLib
     public class MtpCommand
     {
         /// <summary>
+        /// MTPイベント
+        /// </summary>
+        public event Action<ushort> MtpEvent;
+
+        /// <summary>
         /// デバイス
         /// </summary>
         private PortableDevice device;
@@ -15,6 +20,12 @@ namespace WpdMtpLib
         /// イベント識別子
         /// </summary>
         private string eventCookie;
+
+        /// <summary>
+        /// MTPイベントのGUID
+        /// </summary>
+        private static Guid WPD_EVENT_MTP_VENDOR_EXTENDED_EVENTS
+            = new Guid(0x00000000, 0x5738, 0x4ff2, 0x84, 0x45, 0xbe, 0x31, 0x26, 0x69, 0x10, 0x59);
 
         /// <summary>
         /// コンストラクタ
@@ -58,7 +69,7 @@ namespace WpdMtpLib
             Marshal.ReleaseComObject(clientInfo);
 
             // eventを受信できるようにする
-            WpdEvent wpdEvent = new WpdEvent();
+            WpdEvent wpdEvent = new WpdEvent(this);
             IPortableDeviceValues eventParameter = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
             device.Advise(0, wpdEvent, eventParameter, out eventCookie);
         }
@@ -92,12 +103,34 @@ namespace WpdMtpLib
         /// </summary>
         private class WpdEvent : IPortableDeviceEventCallback
         {
+            MtpCommand mtpCommand;
+
+            public WpdEvent(MtpCommand mtpCommand)
+            {
+                this.mtpCommand = mtpCommand;
+            }
+
             public void OnEvent(IPortableDeviceValues pEventParameters)
             {
                 Guid eventId;
                 if (pEventParameters == null) { return; }
                 pEventParameters.GetGuidValue(ref WpdProperty.WPD_EVENT_PARAMETER_EVENT_ID, out eventId);
                 Console.WriteLine(eventId);
+
+                // MTPイベントか調べる
+                byte[] eventIdBytes = eventId.ToByteArray();
+                byte[] mtpEventGuidBytes = WPD_EVENT_MTP_VENDOR_EXTENDED_EVENTS.ToByteArray();
+                for (int i = 4; i < eventIdBytes.Length; i++)
+                {
+                    if (eventIdBytes[i] != mtpEventGuidBytes[i]) { return; }
+                }
+
+                // MtpEventコードを取得する
+                ushort mtpEventCode = BitConverter.ToUInt16(eventIdBytes, 2);
+                if (mtpCommand.MtpEvent != null)
+                {
+                    mtpCommand.MtpEvent(mtpEventCode);
+                }
             }
         }
     }
