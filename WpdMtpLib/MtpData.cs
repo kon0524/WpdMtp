@@ -101,6 +101,20 @@ namespace WpdMtpLib
         }
 
         /// <summary>
+        /// MtpResponseからushort型の数値を取得します
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ushort GetUint16Value(MtpResponse response)
+        {
+            ushort ret = 0;
+            if (response.ResponseCode != MtpResponseCode.OK || response.Data == null || response.Data.Length != 2) { return ret; }
+            ret = BitConverter.ToUInt16(response.Data, 0);
+
+            return ret;
+        }
+
+        /// <summary>
         /// MtpResponseからObjectInfo構造体を取得します
         /// </summary>
         /// <param name="response"></param>

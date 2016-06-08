@@ -1,5 +1,5 @@
 ﻿
-namespace WpdMtpLib
+namespace WpdMtpLib.DeviceProperty
 {
     /// <summary>
     /// Device Prop Code(Thetaでサポートしている値のみ)

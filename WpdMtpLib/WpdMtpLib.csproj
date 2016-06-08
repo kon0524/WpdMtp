@@ -39,9 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeviceProperty\ExposureProgramMode.cs" />
+    <Compile Include="DeviceProperty\FunctionalMode.cs" />
+    <Compile Include="DeviceProperty\StillCaptureMode.cs" />
+    <Compile Include="DeviceProperty\WhiteBalance.cs" />
     <Compile Include="MtpCommand.cs" />
     <Compile Include="MtpData.cs" />
-    <Compile Include="MtpDevicePropCode.cs" />
+    <Compile Include="DeviceProperty\MtpDevicePropCode.cs" />
     <Compile Include="MtpOperation.cs" />
     <Compile Include="MtpOperationCode.cs" />
     <Compile Include="MtpResponse.cs" />
