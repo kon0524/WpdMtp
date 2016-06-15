@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using WpdMtpLib.DeviceProperty;
 
 namespace WpdMtpLib
 {
@@ -65,6 +66,20 @@ namespace WpdMtpLib
             public uint FreeSpaceInObjects;
             public string StorageDescription;
             public string VolumeIdentifier;
+        }
+
+        /// <summary>
+        /// DevicePropDesc構造体
+        /// </summary>
+        public struct DevicePropDesc
+        {
+            public MtpDevicePropCode DevicePropCode;
+            public DataType DataType;
+            public byte GetSet;
+            public dynamic FactoryDefaultValue;
+            public dynamic CurrentValue;
+            public byte FormFlag;
+            public dynamic Form;
         }
 
         /// <summary>
@@ -193,6 +208,66 @@ namespace WpdMtpLib
             storageInfo.VolumeIdentifier = getString(response.Data, ref pos);
 
             return storageInfo;
+        }
+
+        public static DevicePropDesc GetDevicePropDesc(MtpResponse response)
+        {
+            int pos = 0;
+            DevicePropDesc devicePropDesc = new DevicePropDesc();
+            if (response.ResponseCode != MtpResponseCode.OK || response.Data == null) { return devicePropDesc; }
+
+            devicePropDesc.DevicePropCode = (MtpDevicePropCode)BitConverter.ToUInt16(response.Data, pos); pos += 2;
+            devicePropDesc.DataType = (DataType)BitConverter.ToUInt16(response.Data, pos); pos += 2;
+            devicePropDesc.GetSet = response.Data[pos]; pos++;
+            devicePropDesc.FactoryDefaultValue = getValue(response.Data, ref pos, devicePropDesc.DataType);
+            devicePropDesc.CurrentValue = getValue(response.Data, ref pos, devicePropDesc.DataType);
+            devicePropDesc.FormFlag = response.Data[pos]; pos++;
+
+            return devicePropDesc;
+        }
+
+        /// <summary>
+        /// 型に応じて値を取得する
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="pos"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static dynamic getValue(byte[] data, ref int pos, DataType type)
+        {
+            dynamic value = null;
+
+            switch (type)
+            {
+                case DataType.INT8:
+                    value = (char)data[pos]; pos++;
+                    break;
+                case DataType.UINT8:
+                    value = data[pos]; pos++;
+                    break;
+                case DataType.INT16:
+                    value = BitConverter.ToInt16(data, pos); pos += 2;
+                    break;
+                case DataType.UINT16:
+                    value = BitConverter.ToUInt16(data, pos); pos += 2;
+                    break;
+                case DataType.INT32:
+                    value = BitConverter.ToInt32(data, pos); pos += 4;
+                    break;
+                case DataType.UINT32:
+                    value = BitConverter.ToUInt32(data, pos); pos += 4;
+                    break;
+                case DataType.INT64:
+                    value = BitConverter.ToInt64(data, pos); pos += 8;
+                    break;
+                case DataType.UINT64:
+                    value = BitConverter.ToUInt64(data, pos); pos += 8;
+                    break;
+                default:
+                    break;
+            }
+
+            return value;
         }
 
         /// <summary>

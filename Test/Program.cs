@@ -20,7 +20,11 @@ namespace Test
             // DeviceInfo
             res = command.Execute(MtpOperationCode.GetDeviceInfo, null, null);
             MtpData.DeviceInfo dInfo = MtpData.GetDeviceInfoDataset(res);
-            
+
+            // DevicePropDesc(StillCaptureMode)
+            res = command.Execute(MtpOperationCode.GetDevicePropDesc, new uint[1] { (uint)MtpDevicePropCode.StillCaptureMode }, null);
+            MtpData.DevicePropDesc dpd = MtpData.GetDevicePropDesc(res);
+
             // StillCaptureMode
             res = command.Execute(MtpOperationCode.GetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.StillCaptureMode }, null);
             StillCaptureMode mode = (StillCaptureMode)MtpData.GetUint16Value(res);
