@@ -1,4 +1,6 @@
-﻿using WpdMtpLib;
+﻿using System;
+using System.IO;
+using WpdMtpLib;
 using WpdMtpLib.DeviceProperty;
 
 namespace Test
@@ -40,6 +42,25 @@ namespace Test
             // オブジェクト数をとる
             res = command.Execute(MtpOperationCode.GetNumObjects, new uint[3] { storageIds[0], 0, 0 }, null);
             uint num = res.Parameter1;
+
+            // GetObjectHandles
+            res = command.Execute(MtpOperationCode.GetObjectHandles, new uint[3] { storageIds[0], 0, 0 }, null);
+            uint[] objectHandles = MtpData.GetUInt32Array(res);
+
+            // 静止画取得
+            if (objectHandles.Length > 3)
+            {
+                res = command.Execute(MtpOperationCode.GetObject, new uint[1] { objectHandles[3] }, null);
+                if (res.ResponseCode == MtpResponseCode.OK)
+                {
+                    using (FileStream fs = new FileStream(
+                        Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\aaaa.jpg", 
+                        FileMode.Create, FileAccess.Write))
+                    {
+                        fs.Write(res.Data, 0, res.Data.Length);
+                    }
+                }
+            }
 
             // 撮影する
             res = command.Execute(MtpOperationCode.InitiateCapture, new uint[2] { 0, 0 }, null);
