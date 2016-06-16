@@ -192,6 +192,11 @@ namespace WpdMtpLib
             return deviceInfo;
         }
 
+        /// <summary>
+        /// MtpResponseからStorageInfo構造体を取得します
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
         public static StorageInfo GetStorageInfoDataset(MtpResponse response)
         {
             int pos = 0;
@@ -210,6 +215,11 @@ namespace WpdMtpLib
             return storageInfo;
         }
 
+        /// <summary>
+        /// MtpResponseからDevicePropDesc構造体を取得します
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
         public static DevicePropDesc GetDevicePropDesc(MtpResponse response)
         {
             int pos = 0;
@@ -222,8 +232,62 @@ namespace WpdMtpLib
             devicePropDesc.FactoryDefaultValue = getValue(response.Data, ref pos, devicePropDesc.DataType);
             devicePropDesc.CurrentValue = getValue(response.Data, ref pos, devicePropDesc.DataType);
             devicePropDesc.FormFlag = response.Data[pos]; pos++;
+            if (devicePropDesc.FormFlag == 0x02)
+            {   // 配列
+                devicePropDesc.Form = getForm(response.Data, ref pos, devicePropDesc.DataType);
+            }
 
             return devicePropDesc;
+        }
+
+        /// <summary>
+        /// 型に応じた配列を取得します
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="pos"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static dynamic getForm(byte[] data, ref int pos, DataType type)
+        {
+            dynamic value = null;
+
+            switch (type)
+            {
+                case DataType.INT8:
+                    value = (char)data[pos]; pos++;
+                    break;
+                case DataType.UINT8:
+                    value = data[pos]; pos++;
+                    break;
+                case DataType.INT16:
+                    value = BitConverter.ToInt16(data, pos); pos += 2;
+                    break;
+                case DataType.UINT16:
+                    ushort arraySize = BitConverter.ToUInt16(data, pos); pos += 2;
+                    ushort[] array = new ushort[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        array[i] = BitConverter.ToUInt16(data, pos); pos += 2;
+                    }
+                    value = array;
+                    break;
+                case DataType.INT32:
+                    value = BitConverter.ToInt32(data, pos); pos += 4;
+                    break;
+                case DataType.UINT32:
+                    value = BitConverter.ToUInt32(data, pos); pos += 4;
+                    break;
+                case DataType.INT64:
+                    value = BitConverter.ToInt64(data, pos); pos += 8;
+                    break;
+                case DataType.UINT64:
+                    value = BitConverter.ToUInt64(data, pos); pos += 8;
+                    break;
+                default:
+                    break;
+            }
+
+            return value;
         }
 
         /// <summary>

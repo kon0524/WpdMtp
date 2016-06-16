@@ -27,6 +27,13 @@ namespace Test
             res = command.Execute(MtpOperationCode.GetDevicePropDesc, new uint[1] { (uint)MtpDevicePropCode.StillCaptureMode }, null);
             MtpData.DevicePropDesc dpd = MtpData.GetDevicePropDesc(res);
 
+            // ISO優先
+            command.Execute(MtpOperationCode.SetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.ExposureProgramMode }, BitConverter.GetBytes((ushort)ExposureProgramMode.IsoPriorityProgram));
+
+            // DevicePropDesc(ExposureIndex)
+            res = command.Execute(MtpOperationCode.GetDevicePropDesc, new uint[1] { (uint)MtpDevicePropCode.ExposureIndex }, null);
+            dpd = MtpData.GetDevicePropDesc(res);
+
             // StillCaptureMode
             res = command.Execute(MtpOperationCode.GetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.StillCaptureMode }, null);
             StillCaptureMode mode = (StillCaptureMode)MtpData.GetUint16Value(res);
