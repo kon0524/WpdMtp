@@ -51,7 +51,9 @@
     <Compile Include="MtpOperationCode.cs" />
     <Compile Include="MtpResponse.cs" />
     <Compile Include="MtpResponseCode.cs" />
+    <Compile Include="ObjectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="WpdProperty.cs" />
   </ItemGroup>
   <ItemGroup>
