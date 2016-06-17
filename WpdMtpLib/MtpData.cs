@@ -236,8 +236,80 @@ namespace WpdMtpLib
             {   // 配列
                 devicePropDesc.Form = getForm(response.Data, ref pos, devicePropDesc.DataType);
             }
+            else if (devicePropDesc.FormFlag == 0x01)
+            {   // 範囲
+                devicePropDesc.Form = getRangeForm(response.Data, ref pos, devicePropDesc.DataType, 3);
+            }
 
             return devicePropDesc;
+        }
+
+        private static dynamic getRangeForm(byte[] data, ref int pos, DataType type, ushort arraySize)
+        {
+            dynamic value = null;
+            switch (type)
+            {
+                case DataType.INT8:
+                    value = new sbyte[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = (sbyte)data[pos]; pos++;
+                    }
+                    break;
+                case DataType.UINT8:
+                    value = new byte[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = (byte)data[pos]; pos++;
+                    }
+                    break;
+                case DataType.INT16:
+                    value = new short[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = BitConverter.ToInt16(data, pos); pos += 2;
+                    }
+                    break;
+                case DataType.UINT16:
+                    value = new ushort[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = BitConverter.ToUInt16(data, pos); pos += 2;
+                    }
+                    break;
+                case DataType.INT32:
+                    value = new int[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = BitConverter.ToInt32(data, pos); pos += 4;
+                    }
+                    break;
+                case DataType.UINT32:
+                    value = new uint[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = BitConverter.ToUInt32(data, pos); pos += 4;
+                    }
+                    break;
+                case DataType.INT64:
+                    value = new long[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = BitConverter.ToInt64(data, pos); pos += 8;
+                    }
+                    break;
+                case DataType.UINT64:
+                    value = new ulong[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = BitConverter.ToUInt64(data, pos); pos += 8;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return value;
         }
 
         /// <summary>
@@ -249,45 +321,8 @@ namespace WpdMtpLib
         /// <returns></returns>
         private static dynamic getForm(byte[] data, ref int pos, DataType type)
         {
-            dynamic value = null;
-
-            switch (type)
-            {
-                case DataType.INT8:
-                    value = (char)data[pos]; pos++;
-                    break;
-                case DataType.UINT8:
-                    value = data[pos]; pos++;
-                    break;
-                case DataType.INT16:
-                    value = BitConverter.ToInt16(data, pos); pos += 2;
-                    break;
-                case DataType.UINT16:
-                    ushort arraySize = BitConverter.ToUInt16(data, pos); pos += 2;
-                    ushort[] array = new ushort[arraySize];
-                    for (int i = 0; i < arraySize; i++)
-                    {
-                        array[i] = BitConverter.ToUInt16(data, pos); pos += 2;
-                    }
-                    value = array;
-                    break;
-                case DataType.INT32:
-                    value = BitConverter.ToInt32(data, pos); pos += 4;
-                    break;
-                case DataType.UINT32:
-                    value = BitConverter.ToUInt32(data, pos); pos += 4;
-                    break;
-                case DataType.INT64:
-                    value = BitConverter.ToInt64(data, pos); pos += 8;
-                    break;
-                case DataType.UINT64:
-                    value = BitConverter.ToUInt64(data, pos); pos += 8;
-                    break;
-                default:
-                    break;
-            }
-
-            return value;
+            ushort arraySize = BitConverter.ToUInt16(data, pos); pos += 2;
+            return getRangeForm(data, ref pos, type, arraySize);
         }
 
         /// <summary>
