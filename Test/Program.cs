@@ -54,14 +54,21 @@ namespace Test
             res = command.Execute(MtpOperationCode.GetObjectHandles, new uint[3] { storageIds[0], 0, 0 }, null);
             uint[] objectHandles = MtpData.GetUInt32Array(res);
 
-            // 静止画取得
+            // 静止画か動画をデスクトップに保存する
+            // objectHandlesの最初の3つはフォルダのようなので4つ目を取得する
             if (objectHandles.Length > 3)
             {
+                // ファイル名を取得する
+                res = command.Execute(MtpOperationCode.GetObjectInfo, new uint[1] { objectHandles[3] }, null);
+                ObjectInfo objectInfo = new ObjectInfo(res.Data);
+
+                // ファイルを取得する
                 res = command.Execute(MtpOperationCode.GetObject, new uint[1] { objectHandles[3] }, null);
                 if (res.ResponseCode == MtpResponseCode.OK)
                 {
+                    // デスクトップへ保存する
                     using (FileStream fs = new FileStream(
-                        Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\aaaa.jpg", 
+                        Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\" + objectInfo.Filename, // ファイル名
                         FileMode.Create, FileAccess.Write))
                     {
                         fs.Write(res.Data, 0, res.Data.Length);
