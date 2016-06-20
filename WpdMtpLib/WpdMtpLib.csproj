@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.PortableDeviceApiLib">
+      <HintPath>WpdMtpLib\lib\Interop.PortableDeviceApiLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,15 +61,6 @@
     <Compile Include="WpdProperty.cs" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="PortableDeviceApiLib">
-      <Guid>{1F001332-1A57-4934-BE31-AFFC99F4EE0A}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="PortableDeviceTypesLib">
       <Guid>{2B00BA2F-E750-4BEB-9235-97142EDE1D3E}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -76,8 +71,14 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Interop.PortableDeviceApiLib.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib\pdapi.il" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
