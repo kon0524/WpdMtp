@@ -2290,7 +2290,7 @@
   } // end of method PortableDeviceManagerClass::.ctor
 
   .method public hidebysig newslot virtual 
-          instance void  GetDevices([in][out] string&  marshal( lpwstr) pPnPDeviceIDs,
+          instance void  GetDevices([in][out] string[] marshal(lpwstr[]) pPnPDeviceIDs,
                                     [in][out] uint32& pcPnPDeviceIDs) runtime managed internalcall
   {
     .override PortableDeviceApiLib.IPortableDeviceManager::GetDevices
@@ -2304,7 +2304,7 @@
 
   .method public hidebysig newslot virtual 
           instance void  GetDeviceFriendlyName([in] string  marshal( lpwstr) pszPnPDeviceID,
-                                               [in][out] uint16& pDeviceFriendlyName,
+                                               [in][out] uint16[] marshal([]) pDeviceFriendlyName,
                                                [in][out] uint32& pcchDeviceFriendlyName) runtime managed internalcall
   {
     .override PortableDeviceApiLib.IPortableDeviceManager::GetDeviceFriendlyName
@@ -2312,7 +2312,7 @@
 
   .method public hidebysig newslot virtual 
           instance void  GetDeviceDescription([in] string  marshal( lpwstr) pszPnPDeviceID,
-                                              [in][out] uint16& pDeviceDescription,
+                                              [in][out] uint16[] marshal([]) pDeviceDescription,
                                               [in][out] uint32& pcchDeviceDescription) runtime managed internalcall
   {
     .override PortableDeviceApiLib.IPortableDeviceManager::GetDeviceDescription
@@ -2320,7 +2320,7 @@
 
   .method public hidebysig newslot virtual 
           instance void  GetDeviceManufacturer([in] string  marshal( lpwstr) pszPnPDeviceID,
-                                               [in][out] uint16& pDeviceManufacturer,
+                                               [in][out] uint16[] marshal([]) pDeviceManufacturer,
                                                [in][out] uint32& pcchDeviceManufacturer) runtime managed internalcall
   {
     .override PortableDeviceApiLib.IPortableDeviceManager::GetDeviceManufacturer
@@ -2364,7 +2364,7 @@
                                                                                                   2D 34 35 37 34 2D 41 36 46 41 2D 45 43 45 46 39   // -4574-A6FA-ECEF9
                                                                                                   31 37 42 39 41 34 30 00 00 )                      // 17B9A40..
   .method public hidebysig newslot abstract virtual 
-          instance void  GetDevices([in][out] string&  marshal( lpwstr) pPnPDeviceIDs,
+          instance void  GetDevices([in][out] string[] marshal(lpwstr[]) pPnPDeviceIDs,
                                     [in][out] uint32& pcPnPDeviceIDs) runtime managed internalcall
   {
   } // end of method IPortableDeviceManager::GetDevices
@@ -2376,21 +2376,21 @@
 
   .method public hidebysig newslot abstract virtual 
           instance void  GetDeviceFriendlyName([in] string  marshal( lpwstr) pszPnPDeviceID,
-                                               [in][out] uint16& pDeviceFriendlyName,
+                                               [in][out] uint16[] marshal([]) pDeviceFriendlyName,
                                                [in][out] uint32& pcchDeviceFriendlyName) runtime managed internalcall
   {
   } // end of method IPortableDeviceManager::GetDeviceFriendlyName
 
   .method public hidebysig newslot abstract virtual 
           instance void  GetDeviceDescription([in] string  marshal( lpwstr) pszPnPDeviceID,
-                                              [in][out] uint16& pDeviceDescription,
+                                              [in][out] uint16[] marshal([]) pDeviceDescription,
                                               [in][out] uint32& pcchDeviceDescription) runtime managed internalcall
   {
   } // end of method IPortableDeviceManager::GetDeviceDescription
 
   .method public hidebysig newslot abstract virtual 
           instance void  GetDeviceManufacturer([in] string  marshal( lpwstr) pszPnPDeviceID,
-                                               [in][out] uint16& pDeviceManufacturer,
+                                               [in][out] uint16[] marshal([]) pDeviceManufacturer,
                                                [in][out] uint32& pcchDeviceManufacturer) runtime managed internalcall
   {
   } // end of method IPortableDeviceManager::GetDeviceManufacturer
