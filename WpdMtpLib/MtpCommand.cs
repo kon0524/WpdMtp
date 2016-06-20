@@ -49,11 +49,111 @@ namespace WpdMtpLib
             manager.GetDevices(null, ref deviceNum);
             // デバイスIDを取得する
             string[] deviceIds = new string[deviceNum];
-            if (deviceNum > 0) { manager.GetDevices(ref deviceIds[0], ref deviceNum); }
+            if (deviceNum > 0) { manager.GetDevices(deviceIds, ref deviceNum); }
             // 解放
             Marshal.ReleaseComObject(manager);
 
             return deviceIds;
+        }
+
+        /// <summary>
+        /// ushort配列からstringへの変換
+        /// </summary>
+        private string ushortArrayToString(ushort[] usArray)
+        {
+            string str = String.Empty;
+            foreach (ushort letter in usArray) {
+                if (letter != 0) { str += (char)letter; }
+            }
+            return str;
+        }
+
+        /// <summary>
+        /// デバイス名を取得する
+        /// </summary>
+        /// <param name="deviceId">デバイスID</param>
+        public string GetDeviceFriendlyName(string deviceId)
+        {
+            PortableDeviceManager manager = new PortableDeviceManager();
+            uint length = 0;
+            string friendlyName = String.Empty;
+            ushort[] usFriendlyName = null;
+            try {
+                manager.GetDeviceFriendlyName(deviceId, null, ref length);
+            }
+            catch (Exception) {
+                return friendlyName;
+            }
+
+            if (length > 0)
+            {
+                usFriendlyName = new ushort[length];
+                manager.GetDeviceFriendlyName(deviceId, usFriendlyName, ref length);
+                friendlyName = ushortArrayToString(usFriendlyName);
+            }
+            Marshal.ReleaseComObject(manager);
+
+            return friendlyName;
+        }
+
+        /// <summary>
+        /// デバイス製造元を取得する
+        /// </summary>
+        /// <param name="deviceId">デバイスID</param>
+        public string GetDeviceManufacturer(string deviceId)
+        {
+            PortableDeviceManager manager = new PortableDeviceManager();
+            uint length = 0;
+            string manufacturer = String.Empty;
+            ushort[] usManufacturerer = null;
+            try
+            {
+                manager.GetDeviceManufacturer(deviceId, null, ref length);
+            }
+            catch (Exception)
+            {
+                return manufacturer;
+            }
+
+            if (length > 0)
+            {
+                usManufacturerer = new ushort[length];
+                manager.GetDeviceManufacturer(deviceId, usManufacturerer, ref length);
+                manufacturer = ushortArrayToString(usManufacturerer);
+            }
+            Marshal.ReleaseComObject(manager);
+
+            return manufacturer;
+        }
+
+        /// <summary>
+        /// デバイス説明を取得する
+        /// </summary>
+        /// <param name="deviceId">デバイスID</param>
+        public string GetDeviceDescription(string deviceId)
+        {
+            PortableDeviceManager manager = new PortableDeviceManager();
+            uint length = 0;
+            string description = String.Empty;
+            ushort[] usDescription = null;
+            try
+            {
+                manager.GetDeviceDescription(deviceId, null, ref length);
+            }
+            catch (Exception)
+            {
+                return description;
+            }
+
+            if (length > 0)
+            {
+                usDescription = new ushort[length];
+                manager.GetDeviceDescription(deviceId, usDescription, ref length);
+                description = ushortArrayToString(usDescription);
+            }
+            Marshal.ReleaseComObject(manager);
+
+            return description;
         }
 
         /// <summary>
