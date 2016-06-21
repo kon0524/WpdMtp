@@ -16,8 +16,18 @@ namespace Test
             string[] deviceIds = command.GetDeviceIds();
             if (deviceIds.Length == 0) { return; }
 
-            // 運よく最初のデバイスIDが所望のデバイスでありますように...(なんとかしたい)
-            command.Open(deviceIds[0]);
+            // RICOH THETA S デバイスを取得する
+            string targetDeviceId = String.Empty;
+            foreach (string deviceId in deviceIds)
+            {
+                if ("RICOH THETA S".Equals(command.GetDeviceFriendlyName(deviceId)))
+                {
+                    targetDeviceId = deviceId;
+                    break;
+                }
+            }
+            if (targetDeviceId.Length == 0) { return; }
+            command.Open(targetDeviceId);
 
             // DeviceInfo
             res = command.Execute(MtpOperationCode.GetDeviceInfo, null, null);
