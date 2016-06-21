@@ -31,11 +31,11 @@ namespace Test
 
             // DeviceInfo
             res = command.Execute(MtpOperationCode.GetDeviceInfo, null, null);
-            MtpData.DeviceInfo dInfo = MtpData.GetDeviceInfoDataset(res);
+            DeviceInfo deviceInfo = new DeviceInfo(res.Data);
 
             // DevicePropDesc(StillCaptureMode)
             res = command.Execute(MtpOperationCode.GetDevicePropDesc, new uint[1] { (uint)MtpDevicePropCode.StillCaptureMode }, null);
-            MtpData.DevicePropDesc dpd = MtpData.GetDevicePropDesc(res);
+            DevicePropDesc dpd = new DevicePropDesc(res.Data);
 
             // シャッター優先
             command.Execute(MtpOperationCode.SetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.ExposureProgramMode }, BitConverter.GetBytes((ushort)ExposureProgramMode.ShutterPriorityProgram));
@@ -54,19 +54,19 @@ namespace Test
 
             // DevicePropDesc(ExposureIndex)
             res = command.Execute(MtpOperationCode.GetDevicePropDesc, new uint[1] { (uint)MtpDevicePropCode.ExposureIndex }, null);
-            dpd = MtpData.GetDevicePropDesc(res);
+            dpd = new DevicePropDesc(res.Data);
 
             // StillCaptureMode
             res = command.Execute(MtpOperationCode.GetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.StillCaptureMode }, null);
-            StillCaptureMode mode = (StillCaptureMode)MtpData.GetUint16Value(res);
+            StillCaptureMode mode = (StillCaptureMode)BitConverter.ToUInt16(res.Data, 0);
 
             // ストレージIDをとる
             res = command.Execute(MtpOperationCode.GetStorageIDs, null, null);
-            uint[] storageIds = MtpData.GetUInt32Array(res);
+            uint[] storageIds = Utils.GetUIntArray(res.Data);
 
             // ストレージ情報をとる
             res = command.Execute(MtpOperationCode.GetStorageInfo, new uint[1] { storageIds[0] }, null);
-            MtpData.StorageInfo storageInfo = MtpData.GetStorageInfoDataset(res);
+            StorageInfo storageInfo = new StorageInfo(res.Data);
 
             // オブジェクト数をとる
             res = command.Execute(MtpOperationCode.GetNumObjects, new uint[3] { storageIds[0], 0, 0 }, null);
@@ -74,7 +74,7 @@ namespace Test
 
             // GetObjectHandles
             res = command.Execute(MtpOperationCode.GetObjectHandles, new uint[3] { storageIds[0], 0, 0 }, null);
-            uint[] objectHandles = MtpData.GetUInt32Array(res);
+            uint[] objectHandles = Utils.GetUIntArray(res.Data);
 
             // 静止画か動画をデスクトップに保存する
             // objectHandlesの最初の3つはフォルダのようなので4つ目を取得する
@@ -100,7 +100,6 @@ namespace Test
 
             // 撮影する
             res = command.Execute(MtpOperationCode.InitiateCapture, new uint[2] { 0, 0 }, null);
-
 
             // デバイスよさようなら
             command.Close();
