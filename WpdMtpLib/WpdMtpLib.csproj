@@ -46,6 +46,7 @@
     <Compile Include="DataType.cs" />
     <Compile Include="DeviceProperty\ExposureProgramMode.cs" />
     <Compile Include="DeviceProperty\FunctionalMode.cs" />
+    <Compile Include="DeviceProperty\ShutterSpeed.cs" />
     <Compile Include="DeviceProperty\StillCaptureMode.cs" />
     <Compile Include="DeviceProperty\WhiteBalance.cs" />
     <Compile Include="MtpCommand.cs" />

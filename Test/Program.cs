@@ -37,8 +37,20 @@ namespace Test
             res = command.Execute(MtpOperationCode.GetDevicePropDesc, new uint[1] { (uint)MtpDevicePropCode.StillCaptureMode }, null);
             MtpData.DevicePropDesc dpd = MtpData.GetDevicePropDesc(res);
 
-            // ISO優先
-            command.Execute(MtpOperationCode.SetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.ExposureProgramMode }, BitConverter.GetBytes((ushort)ExposureProgramMode.IsoPriorityProgram));
+            // シャッター優先
+            command.Execute(MtpOperationCode.SetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.ExposureProgramMode }, BitConverter.GetBytes((ushort)ExposureProgramMode.ShutterPriorityProgram));
+
+            // シャッター速度(Get)
+            res = command.Execute(MtpOperationCode.GetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.ShutterSpeed }, null);
+            ShutterSpeed ss = new ShutterSpeed(res.Data);
+            
+            // シャッター速度(Set)
+            ss = new ShutterSpeed(1, 100); // 1/100
+            res = command.Execute(MtpOperationCode.SetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.ShutterSpeed }, ss.Data);
+
+            // シャッター速度(Get)
+            res = command.Execute(MtpOperationCode.GetDevicePropValue, new uint[1] { (uint)MtpDevicePropCode.ShutterSpeed }, null);
+            ss = new ShutterSpeed(res.Data);
 
             // DevicePropDesc(ExposureIndex)
             res = command.Execute(MtpOperationCode.GetDevicePropDesc, new uint[1] { (uint)MtpDevicePropCode.ExposureIndex }, null);
