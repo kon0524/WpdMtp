@@ -4,16 +4,14 @@ RICOH THETA Sなどのカメラを操作することができます。
 
 #### 使い方(概要)
 1. MtpCommandのインスタンスを生成します。  
-2. MtpCommandのGetDeviceIds()でPCに接続されているデバイスIDの一覧を取得します。  
-3. MtpCommandのOpen()でデバイスに接続します。  
-4. MtpCommandのExecute()でMTP通信を実行します。  
-5. MtpCommandのClose()でデバイスを切断します。  
+1. MtpCommandのGetDeviceIds()でPCに接続されているデバイスIDの一覧を取得します。  
+1. MtpCommandのOpen()でデバイスに接続します。  
+1. MtpCommandのExecute()でMTP通信を実行します。  
+1. MtpCommandのClose()でデバイスを切断します。  
 
 #### 注意点
-1. 本ライブラリを使用する時は、PortableDeviceAplLibとPortableDeviceTypesLibが必要です。参照に追加してください。また、左記２つのライブラリの相互運用型の埋め込みをFalseにする必要があります。なぜはかわかりません。知っている方教えてください。
-2. いろんなところで予期せぬエラーが発生すると思います。ご使用は計画的かつ慎重に。  
-2. OpenSessionとCloseSessionはWindowsが自動的に行っているようです(未確認)  
-3. 64bitだとダメかもしれません(手元にないので不明。。)  
+1. いろんなところで予期せぬエラーが発生すると思います。ご使用は計画的かつ慎重に。  
+1. OpenSessionとCloseSessionはWindowsが自動的に行っているようです(未確認)   
 
 #### その他
 実装には下記サイトをものすご～く参考にさせていただきました。  

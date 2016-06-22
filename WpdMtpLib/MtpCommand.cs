@@ -164,13 +164,13 @@ namespace WpdMtpLib
         {
             if (device != null) { return; }
             device = new PortableDevice();
-            IPortableDeviceValues clientInfo = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
+            IPortableDeviceValues clientInfo = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             device.Open(deviceId, clientInfo);
             Marshal.ReleaseComObject(clientInfo);
 
             // eventを受信できるようにする
             WpdEvent wpdEvent = new WpdEvent(this);
-            IPortableDeviceValues eventParameter = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
+            IPortableDeviceValues eventParameter = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             device.Advise(0, wpdEvent, eventParameter, out eventCookie);
         }
 
