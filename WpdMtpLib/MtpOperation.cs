@@ -122,7 +122,7 @@ namespace WpdMtpLib
             if (responseCode == 0x2001)
             {
                 IPortableDevicePropVariantCollection resultValues
-                    = (IPortableDevicePropVariantCollection)new PortableDeviceTypesLib.PortableDevicePropVariantCollectionClass();
+                    = (IPortableDevicePropVariantCollection)new PortableDeviceTypesLib.PortableDevicePropVariantCollection();
                 spResults.GetIPortableDevicePropVariantCollectionValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_RESPONSE_PARAMS, out resultValues);
 
                 uint count = 1;
@@ -192,7 +192,7 @@ namespace WpdMtpLib
             {
                 // データ受信用のコマンドを構築する
                 bufferIn = new byte[size];
-                mtpCommand = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
+                mtpCommand = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
                 mtpCommand.SetGuidValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_CATEGORY, ref WpdProperty.WPD_COMMAND_MTP_EXT_READ_DATA.fmtid);
                 mtpCommand.SetUnsignedIntegerValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_ID, WpdProperty.WPD_COMMAND_MTP_EXT_READ_DATA.pid);
                 mtpCommand.SetStringValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_TRANSFER_CONTEXT, context);
@@ -268,7 +268,7 @@ namespace WpdMtpLib
             Marshal.ReleaseComObject(spResults);
 
             // データ送信用のコマンドを構築する
-            mtpCommand = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
+            mtpCommand = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             mtpCommand.SetGuidValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_CATEGORY, ref WpdProperty.WPD_COMMAND_MTP_EXT_WRITE_DATA.fmtid);
             mtpCommand.SetUnsignedIntegerValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_ID, WpdProperty.WPD_COMMAND_MTP_EXT_WRITE_DATA.pid);
             mtpCommand.SetStringValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_TRANSFER_CONTEXT, context);
@@ -303,7 +303,7 @@ namespace WpdMtpLib
         /// <returns></returns>
         private static void sendEndDataTransfer(PortableDevice device, string context, out uint responseCode, out uint[] responseParam)
         {
-            IPortableDeviceValues mtpEndDataTransfer = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
+            IPortableDeviceValues mtpEndDataTransfer = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             mtpEndDataTransfer.SetGuidValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_CATEGORY, ref WpdProperty.WPD_COMMAND_MTP_EXT_END_DATA_TRANSFER.fmtid);
             mtpEndDataTransfer.SetUnsignedIntegerValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_ID, WpdProperty.WPD_COMMAND_MTP_EXT_END_DATA_TRANSFER.pid);
             mtpEndDataTransfer.SetStringValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_TRANSFER_CONTEXT, context);
@@ -330,7 +330,7 @@ namespace WpdMtpLib
             if (responseCode == 0x2001)
             {
                 IPortableDevicePropVariantCollection resultValues
-                    = (IPortableDevicePropVariantCollection)new PortableDeviceTypesLib.PortableDevicePropVariantCollectionClass();
+                    = (IPortableDevicePropVariantCollection)new PortableDeviceTypesLib.PortableDevicePropVariantCollection();
                 spResults.GetIPortableDevicePropVariantCollectionValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_RESPONSE_PARAMS, out resultValues);
 
                 uint count = 1;
@@ -356,7 +356,7 @@ namespace WpdMtpLib
         /// <returns></returns>
         private static IPortableDeviceValues createMtpCommand(MtpOperationCode code, _tagpropertykey dataPhase)
         {
-            IPortableDeviceValues mtpCommand = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
+            IPortableDeviceValues mtpCommand = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             mtpCommand.SetGuidValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_CATEGORY, ref dataPhase.fmtid);
             mtpCommand.SetUnsignedIntegerValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_ID, dataPhase.pid);
             mtpCommand.SetUnsignedIntegerValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_OPERATION_CODE, (uint)code);
@@ -372,7 +372,7 @@ namespace WpdMtpLib
         private static IPortableDevicePropVariantCollection createMtpCommandParameter(uint[] param)
         {
             IPortableDevicePropVariantCollection mtpCommandParameter
-                = (IPortableDevicePropVariantCollection)new PortableDeviceTypesLib.PortableDevicePropVariantCollectionClass();
+                = (IPortableDevicePropVariantCollection)new PortableDeviceTypesLib.PortableDevicePropVariantCollection();
             foreach (uint p in param)
             {
                 tag_inner_PROPVARIANT propValiant = createPropVariant(p);
@@ -391,7 +391,7 @@ namespace WpdMtpLib
         {
             tag_inner_PROPVARIANT propVariant = new tag_inner_PROPVARIANT();
 
-            IPortableDeviceValues pdValues = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
+            IPortableDeviceValues pdValues = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             pdValues.SetUnsignedIntegerValue(ref WpdProperty.WPD_OBJECT_ID, value);
             pdValues.GetValue(ref WpdProperty.WPD_OBJECT_ID, out propVariant);
             Marshal.ReleaseComObject(pdValues);
@@ -408,7 +408,7 @@ namespace WpdMtpLib
         {
             uint ret = 1;
 
-            IPortableDeviceValues pdValues = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValuesClass();
+            IPortableDeviceValues pdValues = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             pdValues.SetValue(ref WpdProperty.WPD_OBJECT_ID, ref value);
             pdValues.GetUnsignedIntegerValue(ref WpdProperty.WPD_OBJECT_ID, out ret);
             Marshal.ReleaseComObject(pdValues);
