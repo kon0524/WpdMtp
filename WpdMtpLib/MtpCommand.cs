@@ -199,6 +199,18 @@ namespace WpdMtpLib
         }
 
         /// <summary>
+        /// MTPオペレーションを実行する
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null)
+        {
+            if (param == null) { param = new uint[5]; }
+            return MtpOperation.ExecuteCommand(device, code, dataPhase, param, data);
+        }
+
+        /// <summary>
         /// WPDのイベントを受信するためのクラス
         /// </summary>
         private class WpdEvent : IPortableDeviceEventCallback

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataPhase.cs" />
     <Compile Include="DataType.cs" />
     <Compile Include="DeviceInfo.cs" />
     <Compile Include="DevicePropDesc.cs" />

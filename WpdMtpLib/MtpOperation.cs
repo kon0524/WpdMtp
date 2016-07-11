@@ -7,29 +7,40 @@ namespace WpdMtpLib
     internal static class MtpOperation
     {
         /// <summary>
-        /// MTPオペレーションのデータフェーズ
-        /// </summary>
-        private enum DataPhaseInfo
-        {
-            NoDataPhase,
-            DataReadPhase,
-            DataWritePhase
-        }
-       
-        /// <summary>
         /// オペレーションを実行する
         /// </summary>
         /// <param name="device"></param>
         /// <returns></returns>
         internal static MtpResponse ExecuteCommand(PortableDevice device, MtpOperationCode code, uint[] param, byte[] sendData)
         {
-            DataPhaseInfo dataPhaseInfo = getDataPhaseInfo(code);
+            DataPhase dataPhaseInfo = getDataPhaseInfo(code);
 
-            if (dataPhaseInfo == DataPhaseInfo.NoDataPhase)
+            if (dataPhaseInfo == DataPhase.NoDataPhase)
+            {
+                return executeNoDataCommand(device, (ushort)code, param);
+            }
+            else if (dataPhaseInfo == DataPhase.DataReadPhase)
+            {
+                return executeDataReadCommand(device, (ushort)code, param);
+            }
+            else
+            {
+                return executeDataWriteCommand(device, (ushort)code, param, sendData);
+            }
+        }
+
+        /// <summary>
+        /// オペレーションを実行する
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        internal static MtpResponse ExecuteCommand(PortableDevice device, ushort code, DataPhase dataPhase, uint[] param, byte[] sendData)
+        {
+            if (dataPhase == DataPhase.NoDataPhase)
             {
                 return executeNoDataCommand(device, code, param);
             }
-            else if (dataPhaseInfo == DataPhaseInfo.DataReadPhase)
+            else if (dataPhase == DataPhase.DataReadPhase)
             {
                 return executeDataReadCommand(device, code, param);
             }
@@ -44,7 +55,7 @@ namespace WpdMtpLib
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
-        private static DataPhaseInfo getDataPhaseInfo(MtpOperationCode code)
+        private static DataPhase getDataPhaseInfo(MtpOperationCode code)
         {
             switch (code)
             {
@@ -57,7 +68,7 @@ namespace WpdMtpLib
                 case MtpOperationCode.InitiateOpenCapture:
                 case MtpOperationCode.StopSelfTimer:
                     // データフェーズが無いオペレーション
-                    return DataPhaseInfo.NoDataPhase;
+                    return DataPhase.NoDataPhase;
 
                 case MtpOperationCode.GetDeviceInfo:
                 case MtpOperationCode.GetStorageIDs:
@@ -70,11 +81,11 @@ namespace WpdMtpLib
                 case MtpOperationCode.GetDevicePropValue:
                 case MtpOperationCode.GetPartialObject:
                     // R->I
-                    return DataPhaseInfo.DataReadPhase;
+                    return DataPhase.DataReadPhase;
 
                 case MtpOperationCode.SetDevicePropValue:
                     // I->R
-                    return DataPhaseInfo.DataWritePhase;
+                    return DataPhase.DataWritePhase;
 
                 default:
                     throw new ArgumentException();
@@ -88,7 +99,7 @@ namespace WpdMtpLib
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        private static MtpResponse executeNoDataCommand(PortableDevice device, MtpOperationCode code, uint[] param)
+        private static MtpResponse executeNoDataCommand(PortableDevice device, ushort code, uint[] param)
         {
             IPortableDeviceValues spResults;
             int ret;
@@ -148,7 +159,7 @@ namespace WpdMtpLib
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        private static MtpResponse executeDataReadCommand(PortableDevice device, MtpOperationCode code, uint[] param)
+        private static MtpResponse executeDataReadCommand(PortableDevice device, ushort code, uint[] param)
         {
             IPortableDeviceValues spResults;
             int ret;
@@ -232,7 +243,7 @@ namespace WpdMtpLib
         /// <param name="param"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private static MtpResponse executeDataWriteCommand(PortableDevice device, MtpOperationCode code, uint[] param, byte[] data)
+        private static MtpResponse executeDataWriteCommand(PortableDevice device, ushort code, uint[] param, byte[] data)
         {
             int ret = 1;
             string context;
@@ -354,7 +365,7 @@ namespace WpdMtpLib
         /// </summary>
         /// <param name="code">オペレーションコード</param>
         /// <returns></returns>
-        private static IPortableDeviceValues createMtpCommand(MtpOperationCode code, _tagpropertykey dataPhase)
+        private static IPortableDeviceValues createMtpCommand(ushort code, _tagpropertykey dataPhase)
         {
             IPortableDeviceValues mtpCommand = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             mtpCommand.SetGuidValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_CATEGORY, ref dataPhase.fmtid);
