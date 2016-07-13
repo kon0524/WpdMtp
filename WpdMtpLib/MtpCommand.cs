@@ -227,7 +227,7 @@ namespace WpdMtpLib
                 Guid eventId;
                 if (pEventParameters == null) { return; }
                 pEventParameters.GetGuidValue(ref WpdProperty.WPD_EVENT_PARAMETER_EVENT_ID, out eventId);
-                Console.WriteLine(eventId);
+                //Console.WriteLine(eventId);
 
                 // MTPイベントか調べる
                 byte[] eventIdBytes = eventId.ToByteArray();

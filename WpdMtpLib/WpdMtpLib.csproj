@@ -55,6 +55,7 @@
     <Compile Include="DeviceProperty\WhiteBalance.cs" />
     <Compile Include="MtpCommand.cs" />
     <Compile Include="DeviceProperty\MtpDevicePropCode.cs" />
+    <Compile Include="MtpEvent.cs" />
     <Compile Include="MtpOperation.cs" />
     <Compile Include="MtpOperationCode.cs" />
     <Compile Include="MtpResponse.cs" />

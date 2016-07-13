@@ -29,6 +29,9 @@ namespace Test
             if (targetDeviceId.Length == 0) { return; }
             command.Open(targetDeviceId);
 
+            // イベントを受け取れるようにする
+            command.MtpEvent += MtpEventListener;
+
             // DeviceInfo
             res = command.Execute(MtpOperationCode.GetDeviceInfo, null, null);
             DeviceInfo deviceInfo = new DeviceInfo(res.Data);
@@ -103,6 +106,39 @@ namespace Test
 
             // デバイスよさようなら
             command.Close();
+        }
+
+        /// <summary>
+        /// イベント用コールバック
+        /// </summary>
+        /// <param name="eventCode"></param>
+        static void MtpEventListener(ushort eventCode)
+        {
+            Console.WriteLine("Event : " + eventCode);
+            switch (eventCode)
+            {
+                case MtpEvent.ObjectAdded:
+                    Console.WriteLine("ObjectAdded.");
+                    break;
+                case MtpEvent.DevicePropChanged:
+                    Console.WriteLine("DevicePropChanged.");
+                    break;
+                case MtpEvent.DeviceInfoChanged:
+                    Console.WriteLine("DeviceInfoChanged.");
+                    break;
+                case MtpEvent.StoreFull:
+                    Console.WriteLine("StoreFull.");
+                    break;
+                case MtpEvent.StorageInfoChanged:
+                    Console.WriteLine("StorageInfoChanged.");
+                    break;
+                case MtpEvent.CaptureComplete:
+                    Console.WriteLine("CaptureComplete.");
+                    break;
+                default:
+                    Console.WriteLine("Unknown Event");
+                    break;
+            }
         }
     }
 }
