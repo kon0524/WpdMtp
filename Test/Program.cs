@@ -112,13 +112,13 @@ namespace Test
         /// イベント用コールバック
         /// </summary>
         /// <param name="eventCode"></param>
-        static void MtpEventListener(ushort eventCode)
+        static void MtpEventListener(ushort eventCode, object eventValue)
         {
             Console.WriteLine("Event : " + eventCode);
             switch (eventCode)
             {
                 case MtpEvent.ObjectAdded:
-                    Console.WriteLine("ObjectAdded.");
+                    Console.WriteLine("ObjectAdded. ObjectID: {0}", (uint)eventValue);
                     break;
                 case MtpEvent.DevicePropChanged:
                     Console.WriteLine("DevicePropChanged.");
