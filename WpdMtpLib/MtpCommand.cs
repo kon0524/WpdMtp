@@ -30,6 +30,8 @@ namespace WpdMtpLib
             = new Guid(0x00000000, 0x5738, 0x4ff2, 0x84, 0x45, 0xbe, 0x31, 0x26, 0x69, 0x10, 0x59);
         private static Guid WPD_EVENT_OBJECT_ADDED
             = new Guid( 0xA726DA95, 0xE207, 0x4B02, 0x8D, 0x44, 0xBE, 0xF2, 0xE8, 0x6C, 0xBF, 0xFC);
+        private static Guid WPD_EVENT_DEVICE_REMOVED
+            = new Guid(0xE4CBCA1B, 0x6918, 0x48B9, 0x85, 0xEE, 0x02, 0xBE, 0x7C, 0x85, 0x0A, 0xF9);
 
         /// <summary>
         /// コンストラクタ
@@ -243,6 +245,12 @@ namespace WpdMtpLib
                     Debug.WriteLine("[WpdEvent] ObjectID: " + objectIdStr);
                     uint objectId = uint.Parse(objectIdStr.Trim('o'), NumberStyles.HexNumber);
                     eventValue = objectId;
+                }
+                else if (eventId.Equals(WPD_EVENT_DEVICE_REMOVED))
+                {
+                    Debug.WriteLine("[WpdEvent] Device Removed. Terminate.");
+                    mtpCommand.device.Unadvise(mtpCommand.eventCookie);
+                    mtpCommand.device = null;
                 }
                 else if (isGuidMtpVendorExtendedEvents(eventId))
                 {
