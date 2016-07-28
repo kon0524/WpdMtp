@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace WpdMtpLib
 {
@@ -38,11 +39,28 @@ namespace WpdMtpLib
             = new Guid(0x36885AA1, 0xCD54, 0x4DAA, 0xB3, 0xD0, 0xAF, 0xB3, 0xE0, 0x3F, 0x59, 0x99);
 
         /// <summary>
+        /// MTP排他制御用セマフォ
+        /// </summary>
+        private Semaphore sem = null;
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public MtpCommand()
         {
             device = null;
+        }
+
+        /// <summary>
+        /// デストラクター
+        /// </summary>
+        ~MtpCommand()
+        {
+            if (sem != null)
+            {
+                sem.Close();
+                sem = null;
+            }
         }
 
         /// <summary>
@@ -173,6 +191,13 @@ namespace WpdMtpLib
         public void Open(string deviceId)
         {
             if (device != null) { return; }
+
+            // 排他制御用のセマフォを生成する
+            if (sem == null)
+            {
+                sem = new Semaphore(1, 1, "WpdMtpSem");
+            }
+
             device = new PortableDevice();
             IPortableDeviceValues clientInfo = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             device.Open(deviceId, clientInfo);
@@ -194,6 +219,10 @@ namespace WpdMtpLib
             device.Close();
             Marshal.ReleaseComObject(device);
             device = null;
+
+            // 排他制御用セマフォを解放する
+            sem.Close();
+            sem = null;
         }
 
         /// <summary>
@@ -205,7 +234,10 @@ namespace WpdMtpLib
         public MtpResponse Execute(MtpOperationCode code, uint[] param, byte[] data = null)
         {
             if (param == null) { param = new uint[5]; }
-            return MtpOperation.ExecuteCommand(device, code, param, data);
+            sem.WaitOne();
+            MtpResponse res = MtpOperation.ExecuteCommand(device, code, param, data);
+            sem.Release();
+            return res;
         }
 
         /// <summary>
@@ -217,7 +249,10 @@ namespace WpdMtpLib
         public MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null)
         {
             if (param == null) { param = new uint[5]; }
-            return MtpOperation.ExecuteCommand(device, code, dataPhase, param, data);
+            sem.WaitOne();
+            MtpResponse res = MtpOperation.ExecuteCommand(device, code, dataPhase, param, data);
+            sem.Release();
+            return res;
         }
 
         /// <summary>
