@@ -29,7 +29,13 @@ namespace WpdMtpLib
         private static Guid WPD_EVENT_MTP_VENDOR_EXTENDED_EVENTS
             = new Guid(0x00000000, 0x5738, 0x4ff2, 0x84, 0x45, 0xbe, 0x31, 0x26, 0x69, 0x10, 0x59);
         private static Guid WPD_EVENT_OBJECT_ADDED
-            = new Guid( 0xA726DA95, 0xE207, 0x4B02, 0x8D, 0x44, 0xBE, 0xF2, 0xE8, 0x6C, 0xBF, 0xFC);
+            = new Guid(0xA726DA95, 0xE207, 0x4B02, 0x8D, 0x44, 0xBE, 0xF2, 0xE8, 0x6C, 0xBF, 0xFC);
+        private static Guid WPD_EVENT_DEVICE_REMOVED
+            = new Guid(0xE4CBCA1B, 0x6918, 0x48B9, 0x85, 0xEE, 0x02, 0xBE, 0x7C, 0x85, 0x0A, 0xF9);
+        private static Guid WPD_EVENT_OBJECT_UPDATED
+            = new Guid(0x1445A759, 0x2E01, 0x485D, 0x9F, 0x27, 0xFF, 0x07, 0xDA, 0xE6, 0x97, 0xAB);
+        private static Guid WPD_EVENT_DEVICE_CAPABILITIES_UPDATED
+            = new Guid(0x36885AA1, 0xCD54, 0x4DAA, 0xB3, 0xD0, 0xAF, 0xB3, 0xE0, 0x3F, 0x59, 0x99);
 
         /// <summary>
         /// コンストラクタ
@@ -240,9 +246,27 @@ namespace WpdMtpLib
                     mtpEventCode = WpdMtpLib.MtpEvent.ObjectAdded;
                     string objectIdStr;
                     pEventParameters.GetStringValue(WpdProperty.WPD_OBJECT_ID, out objectIdStr);
-                    Debug.WriteLine("[WpdEvent] ObjectID: " + objectIdStr);
+                    Debug.WriteLine("[WpdEvent][ObjectAdded] ObjectID: " + objectIdStr);
                     uint objectId = uint.Parse(objectIdStr.Trim('o'), NumberStyles.HexNumber);
                     eventValue = objectId;
+                }
+                else if (eventId.Equals(WPD_EVENT_DEVICE_REMOVED))
+                {
+                    Debug.WriteLine("[WpdEvent] Device Removed. Terminate.");
+                    mtpCommand.device.Unadvise(mtpCommand.eventCookie);
+                    mtpCommand.device = null;
+                }
+                else if (eventId.Equals(WPD_EVENT_OBJECT_UPDATED) || eventId.Equals(WPD_EVENT_DEVICE_CAPABILITIES_UPDATED))
+                {
+                    string objectIdStr;
+                    pEventParameters.GetStringValue(WpdProperty.WPD_OBJECT_ID, out objectIdStr);
+                    Debug.WriteLine("[WpdEvent][ObjectUpdated] ObjectID                : " + objectIdStr);
+                    string objectNameStr;
+                    pEventParameters.GetStringValue(WpdProperty.WPD_OBJECT_NAME, out objectNameStr);
+                    Debug.WriteLine("[WpdEvent][ObjectUpdated] ObjectName              : " + objectNameStr);
+                    if (objectIdStr == "DEVICE") {
+                        mtpEventCode = WpdMtpLib.MtpEvent.DevicePropChanged;
+                    }
                 }
                 else if (isGuidMtpVendorExtendedEvents(eventId))
                 {

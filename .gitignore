@@ -1,4 +1,6 @@
 /WpdMtpLib/obj
+/WpdMtpLib/bin/Debug
+WpdMtpLib.pdb
 /Test/bin
 /Test/obj
 *.suo
