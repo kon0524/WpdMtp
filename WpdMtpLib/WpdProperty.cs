@@ -130,6 +130,11 @@ namespace WpdMtpLib
             fmtid = new Guid(0x15AB1953, 0xF817, 0x4FEF, 0xA9, 0x21, 0x56, 0x76, 0xE8, 0x38, 0xF6, 0xE0),
             pid = 3
         };
+        public static _tagpropertykey WPD_EVENT_DEVICE_CAPABILITIES_UPDATED = new _tagpropertykey()
+        {
+            fmtid = new Guid(0x15AB1953, 0xF817, 0x4FEF, 0xA9, 0x21, 0x56, 0x76, 0xE8, 0x38, 0xF6, 0xE0),
+            pid = 3
+        };
 
         /**************************************/
         /*               OTHER                */
@@ -138,6 +143,11 @@ namespace WpdMtpLib
         {
             fmtid = new Guid(0xEF6B490D, 0x5CD8, 0x437A, 0xAF, 0xFC, 0xDA, 0x8B, 0x60, 0xEE, 0x4A, 0x3C),
             pid = 2
+        };
+        public static _tagpropertykey WPD_OBJECT_NAME = new _tagpropertykey()
+        {
+            fmtid = new Guid(0xEF6B490D, 0x5CD8, 0x437A, 0xAF, 0xFC, 0xDA, 0x8B, 0x60, 0xEE, 0x4A, 0x3C),
+            pid = 4
         };
 
         public static _tagpropertykey WPD_PROPERTY_COMMON_HRESULT = new _tagpropertykey()

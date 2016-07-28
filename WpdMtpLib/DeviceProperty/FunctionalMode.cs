@@ -3,7 +3,7 @@ namespace WpdMtpLib.DeviceProperty
 {
     public enum FunctionalMode : ushort
     {
-        Enable = 0x0000,
-        Disable = 0x8001
+        Disable = 0x0000,
+        Enable = 0x8001
     }
 }
