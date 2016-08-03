@@ -139,6 +139,12 @@ namespace WpdMtpLib
         /**************************************/
         /*               OTHER                */
         /**************************************/
+        public static _tagpropertykey WPD_DEVICE_TYPE = new _tagpropertykey()
+        {
+            fmtid = new Guid(0x26D4979A, 0xE643, 0x4626, 0x9E, 0x2B, 0x73, 0x6D, 0xC0, 0xC9, 0x2F, 0xDC),
+            pid = 15
+        };
+
         public static _tagpropertykey WPD_OBJECT_ID = new _tagpropertykey()
         {
             fmtid = new Guid(0xEF6B490D, 0x5CD8, 0x437A, 0xAF, 0xFC, 0xDA, 0x8B, 0x60, 0xEE, 0x4A, 0x3C),

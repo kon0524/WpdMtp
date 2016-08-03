@@ -97,6 +97,37 @@ namespace WpdMtpLib
         }
 
         /// <summary>
+        /// デバイス種別を取得する
+        /// </summary>
+        /// <param name="deviceId">デバイスID</param>
+        public DeviceType GetDeviceType(string deviceId)
+        {
+            PortableDeviceManager manager = new PortableDeviceManager();
+            uint deviceType = (uint)DeviceType.Unknown;
+            try {
+                Open(deviceId);
+                IPortableDeviceContent content;
+                IPortableDeviceProperties properties;
+                device.Content(out content);
+                content.Properties(out properties);
+                PortableDeviceApiLib.IPortableDeviceValues propertyValues;
+                properties.GetValues("DEVICE", null, out propertyValues);
+                propertyValues.GetUnsignedIntegerValue(WpdProperty.WPD_DEVICE_TYPE, out deviceType);
+                if (Marshal.IsComObject(propertyValues)) { Marshal.ReleaseComObject(propertyValues); }
+                if (Marshal.IsComObject(properties)) { Marshal.ReleaseComObject(properties); }
+                if (Marshal.IsComObject(content)) { Marshal.ReleaseComObject(content); }
+                Close();
+            }
+            catch (Exception)
+            {
+                deviceType = (uint)DeviceType.Unknown;
+            }
+            Marshal.ReleaseComObject(manager);
+
+            return (DeviceType)deviceType;
+        }
+
+        /// <summary>
         /// デバイス名を取得する
         /// </summary>
         /// <param name="deviceId">デバイスID</param>
