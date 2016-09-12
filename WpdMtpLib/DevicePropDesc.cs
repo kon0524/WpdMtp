@@ -93,6 +93,13 @@ namespace WpdMtpLib
                         value[i] = BitConverter.ToUInt64(data, pos); pos += 8;
                     }
                     break;
+                case DataType.STR:
+                    value = new string[3];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        value[i] = Utils.GetString(data, ref pos);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -149,6 +156,9 @@ namespace WpdMtpLib
                     break;
                 case DataType.UINT64:
                     value = BitConverter.ToUInt64(data, pos); pos += 8;
+                    break;
+                case DataType.STR:
+                    value = Utils.GetString(data, ref pos);
                     break;
                 default:
                     break;
