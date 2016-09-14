@@ -2,7 +2,7 @@
 namespace WpdMtpLib.DeviceProperty
 {
     /// <summary>
-    /// Device Prop Code(Thetaでサポートしている値のみ)
+    /// Device Prop Code
     /// </summary>
     public enum MtpDevicePropCode : ushort
     {
@@ -10,6 +10,7 @@ namespace WpdMtpLib.DeviceProperty
         FunctionalMode,
         ImageSize,
         WhiteBalance            = 0x5005,
+        FNumber                 = 0x5007,
         ExposureProgramMode     = 0x500E,
         ExposureIndex,
         ExposureBiasCompensation,
