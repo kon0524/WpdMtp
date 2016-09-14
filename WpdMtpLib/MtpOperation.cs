@@ -1,11 +1,45 @@
 ﻿using PortableDeviceApiLib;
 using System;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace WpdMtpLib
 {
+    /// <summary>
+    /// MTPオペレーションを実行する
+    /// </summary>
     internal static class MtpOperation
     {
+        /// <summary>
+        /// MtpOperationCodeとDataPhaseの一覧
+        /// </summary>
+        private static Dictionary<MtpOperationCode, DataPhase> OperationCode2DataPhase
+            = new Dictionary<MtpOperationCode, DataPhase>()
+            {
+                // データフェーズのないオペレーション
+                {MtpOperationCode.OpenSession, DataPhase.NoDataPhase},
+                {MtpOperationCode.CloseSession, DataPhase.NoDataPhase},
+                {MtpOperationCode.GetNumObjects, DataPhase.NoDataPhase},
+                {MtpOperationCode.DeleteObject, DataPhase.NoDataPhase},
+                {MtpOperationCode.InitiateCapture, DataPhase.NoDataPhase},
+                {MtpOperationCode.TerminateOpenCapture, DataPhase.NoDataPhase},
+                {MtpOperationCode.InitiateOpenCapture, DataPhase.NoDataPhase},
+                {MtpOperationCode.StopSelfTimer, DataPhase.NoDataPhase},
+                // R->Iのデータフェーズがあるオペレーション
+                {MtpOperationCode.GetDeviceInfo, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetStorageIDs, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetStorageInfo, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetObjectHandles, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetObjectInfo, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetObject, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetThumb, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetDevicePropDesc, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetDevicePropValue, DataPhase.DataReadPhase},
+                {MtpOperationCode.GetPartialObject, DataPhase.DataReadPhase},
+                // I->Rのデータフェーズがあるオペレーション
+                {MtpOperationCode.SetDevicePropValue, DataPhase.DataWritePhase}
+            };
+
         /// <summary>
         /// オペレーションを実行する
         /// </summary>
@@ -13,7 +47,7 @@ namespace WpdMtpLib
         /// <returns></returns>
         internal static MtpResponse ExecuteCommand(PortableDevice device, MtpOperationCode code, uint[] param, byte[] sendData)
         {
-            DataPhase dataPhaseInfo = getDataPhaseInfo(code);
+            DataPhase dataPhaseInfo = OperationCode2DataPhase[code];
 
             if (dataPhaseInfo == DataPhase.NoDataPhase)
             {
@@ -47,48 +81,6 @@ namespace WpdMtpLib
             else
             {
                 return executeDataWriteCommand(device, code, param, sendData);
-            }
-        }
-
-        /// <summary>
-        /// データフェーズを取得する
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        private static DataPhase getDataPhaseInfo(MtpOperationCode code)
-        {
-            switch (code)
-            {
-                case MtpOperationCode.OpenSession:
-                case MtpOperationCode.CloseSession:
-                case MtpOperationCode.GetNumObjects:
-                case MtpOperationCode.DeleteObject:
-                case MtpOperationCode.InitiateCapture:
-                case MtpOperationCode.TerminateOpenCapture:
-                case MtpOperationCode.InitiateOpenCapture:
-                case MtpOperationCode.StopSelfTimer:
-                    // データフェーズが無いオペレーション
-                    return DataPhase.NoDataPhase;
-
-                case MtpOperationCode.GetDeviceInfo:
-                case MtpOperationCode.GetStorageIDs:
-                case MtpOperationCode.GetStorageInfo:
-                case MtpOperationCode.GetObjectHandles:
-                case MtpOperationCode.GetObjectInfo:
-                case MtpOperationCode.GetObject:
-                case MtpOperationCode.GetThumb:
-                case MtpOperationCode.GetDevicePropDesc:
-                case MtpOperationCode.GetDevicePropValue:
-                case MtpOperationCode.GetPartialObject:
-                    // R->I
-                    return DataPhase.DataReadPhase;
-
-                case MtpOperationCode.SetDevicePropValue:
-                    // I->R
-                    return DataPhase.DataWritePhase;
-
-                default:
-                    throw new ArgumentException();
             }
         }
 
