@@ -85,6 +85,15 @@ namespace WpdMtpLib
         }
 
         /// <summary>
+        /// 接続したデバイスを取得する
+        /// </summary>
+        /// <returns></returns>
+        public object GetDevice()
+        {
+            return device;
+        }
+
+        /// <summary>
         /// ushort配列からstringへの変換
         /// </summary>
         private string ushortArrayToString(ushort[] usArray)
