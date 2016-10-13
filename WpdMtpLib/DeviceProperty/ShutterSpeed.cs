@@ -83,6 +83,7 @@ namespace WpdMtpLib.DeviceProperty
         public static ulong SS_25_1   = 0x0000000100000019; // 25
         public static ulong SS_30_1   = 0x000000010000001E; // 30
         public static ulong SS_60_1   = 0x000000010000003C; // 60
+        public static ulong SS_0_1    = 0x0000000100000000; // AUTO(0/1)
         public static ulong SS_AUTO   = 0x0000000000000000; // AUTO
 
         /// <summary>
