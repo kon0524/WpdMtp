@@ -15,6 +15,11 @@ namespace WpdMtpLib
         public event Action<ushort, object> MtpEvent;
 
         /// <summary>
+        /// デバイスイベント
+        /// </summary>
+        public event Action<DeviceEvent, object> DeviceEvent;
+
+        /// <summary>
         /// デバイス
         /// </summary>
         private PortableDevice device;
@@ -91,6 +96,15 @@ namespace WpdMtpLib
         public object GetDevice()
         {
             return device;
+        }
+
+        /// <summary>
+        /// デバイスの接続状況
+        /// </summary>
+        /// <returns></returns>
+        public bool IsOpened()
+        {
+            return device != null;
         }
 
         /// <summary>
@@ -306,7 +320,16 @@ namespace WpdMtpLib
         {
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
-            MtpResponse res = MtpOperation.ExecuteCommand(device, code, param, data);
+            MtpResponse res;
+            try
+            {
+                res = MtpOperation.ExecuteCommand(device, code, param, data);
+            }
+            catch (COMException e)
+            {
+                Debug.WriteLine("[WpdCommand.Execute] COM Error occured. ErrorCode: 0x" + e.ErrorCode.ToString("x"));
+                res = new MtpResponse((ushort)MtpResponseCode.Error, param, data);
+            }
             sem.Release();
             return res;
         }
@@ -321,7 +344,16 @@ namespace WpdMtpLib
         {
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
-            MtpResponse res = MtpOperation.ExecuteCommand(device, code, dataPhase, param, data);
+            MtpResponse res;
+            try
+            {
+                res = MtpOperation.ExecuteCommand(device, code, dataPhase, param, data);
+            }
+            catch (COMException e)
+            {
+                Debug.WriteLine("[WpdCommand.Execute] COM Error occured. ErrorCode: 0x" + e.ErrorCode.ToString("x"));
+                res = new MtpResponse((ushort)MtpResponseCode.Error, param, data);
+            }
             sem.Release();
             return res;
         }
@@ -361,6 +393,7 @@ namespace WpdMtpLib
                     Debug.WriteLine("[WpdEvent] Device Removed. Terminate.");
                     mtpCommand.device.Unadvise(mtpCommand.eventCookie);
                     mtpCommand.device = null;
+                    mtpCommand.DeviceEvent(WpdMtpLib.DeviceEvent.Removed, eventValue);
                 }
                 else if (eventId.Equals(WPD_EVENT_OBJECT_UPDATED) || eventId.Equals(WPD_EVENT_DEVICE_CAPABILITIES_UPDATED))
                 {
