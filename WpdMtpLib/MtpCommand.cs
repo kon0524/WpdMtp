@@ -129,7 +129,8 @@ namespace WpdMtpLib
             string deviceProtocol = string.Empty;
             try
             {
-                Open(deviceId);
+                var isOpened = IsOpened();
+                if (!isOpened) { Open(deviceId); }
                 IPortableDeviceContent content;
                 IPortableDeviceProperties properties;
                 device.Content(out content);
@@ -140,7 +141,7 @@ namespace WpdMtpLib
                 if (Marshal.IsComObject(propertyValues)) { Marshal.ReleaseComObject(propertyValues); }
                 if (Marshal.IsComObject(properties)) { Marshal.ReleaseComObject(properties); }
                 if (Marshal.IsComObject(content)) { Marshal.ReleaseComObject(content); }
-                Close();
+                if (!isOpened) { Close(); }
             }
             catch (Exception)
             {
@@ -159,7 +160,8 @@ namespace WpdMtpLib
             PortableDeviceManager manager = new PortableDeviceManager();
             uint deviceType = (uint)DeviceType.Unknown;
             try {
-                Open(deviceId);
+                var isOpened = IsOpened();
+                if (!isOpened) { Open(deviceId); }
                 IPortableDeviceContent content;
                 IPortableDeviceProperties properties;
                 device.Content(out content);
@@ -170,7 +172,7 @@ namespace WpdMtpLib
                 if (Marshal.IsComObject(propertyValues)) { Marshal.ReleaseComObject(propertyValues); }
                 if (Marshal.IsComObject(properties)) { Marshal.ReleaseComObject(properties); }
                 if (Marshal.IsComObject(content)) { Marshal.ReleaseComObject(content); }
-                Close();
+                if (!isOpened) { Close(); }
             }
             catch (Exception)
             {
