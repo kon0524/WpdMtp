@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace WpdMtpLib
@@ -282,7 +283,8 @@ namespace WpdMtpLib
             // 排他制御用のセマフォを生成する
             if (sem == null)
             {
-                sem = new Semaphore(1, 1, "WpdMtpSem");
+                var semName = Regex.Replace("WpdMtpSem" + deviceId, "[^0-9a-zA-Z]", "", RegexOptions.Singleline);
+                sem = new Semaphore(1, 1, semName);
             }
 
             device = new PortableDevice();
