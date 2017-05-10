@@ -322,6 +322,11 @@ namespace WpdMtpLib
         /// <returns></returns>
         public MtpResponse Execute(MtpOperationCode code, uint[] param, byte[] data = null)
         {
+            if (!IsOpened())
+            {
+                Debug.WriteLine("[WpdCommand.Execute] device is null.");
+                return new MtpResponse((ushort)MtpResponseCode.Error, param, data);
+            }
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
             MtpResponse res;
@@ -334,7 +339,10 @@ namespace WpdMtpLib
                 Debug.WriteLine("[WpdCommand.Execute] COM Error occured. ErrorCode: 0x" + e.ErrorCode.ToString("x"));
                 res = new MtpResponse((ushort)MtpResponseCode.Error, param, data);
             }
-            sem.Release();
+            finally
+            {
+                sem.Release();
+            }
             return res;
         }
 
@@ -346,6 +354,11 @@ namespace WpdMtpLib
         /// <returns></returns>
         public MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null)
         {
+            if (!IsOpened())
+            {
+                Debug.WriteLine("[WpdCommand.Execute] device is null.");
+                return new MtpResponse((ushort)MtpResponseCode.Error, param, data);
+            }
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
             MtpResponse res;
@@ -358,7 +371,10 @@ namespace WpdMtpLib
                 Debug.WriteLine("[WpdCommand.Execute] COM Error occured. ErrorCode: 0x" + e.ErrorCode.ToString("x"));
                 res = new MtpResponse((ushort)MtpResponseCode.Error, param, data);
             }
-            sem.Release();
+            finally
+            {
+                sem.Release();
+            }
             return res;
         }
 
