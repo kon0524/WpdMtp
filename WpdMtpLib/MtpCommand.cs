@@ -73,7 +73,7 @@ namespace WpdMtpLib
         /// 接続されているデバイスのID配列を取得する
         /// </summary>
         /// <returns></returns>
-        public string[] GetDeviceIds()
+        public virtual string[] GetDeviceIds()
         {
             // デバイスマネージャ
             PortableDeviceManager manager = new PortableDeviceManager();
@@ -124,7 +124,7 @@ namespace WpdMtpLib
         /// デバイスプロトコルを取得する
         /// </summary>
         /// <param name="deviceId">デバイスID</param>
-        public string GetDeviceProtocol(string deviceId)
+        public virtual string GetDeviceProtocol(string deviceId)
         {
             PortableDeviceManager manager = new PortableDeviceManager();
             string deviceProtocol = string.Empty;
@@ -156,7 +156,7 @@ namespace WpdMtpLib
         /// デバイス種別を取得する
         /// </summary>
         /// <param name="deviceId">デバイスID</param>
-        public DeviceType GetDeviceType(string deviceId)
+        public virtual DeviceType GetDeviceType(string deviceId)
         {
             PortableDeviceManager manager = new PortableDeviceManager();
             uint deviceType = (uint)DeviceType.Unknown;
@@ -188,7 +188,7 @@ namespace WpdMtpLib
         /// デバイス名を取得する
         /// </summary>
         /// <param name="deviceId">デバイスID</param>
-        public string GetDeviceFriendlyName(string deviceId)
+        public virtual string GetDeviceFriendlyName(string deviceId)
         {
             PortableDeviceManager manager = new PortableDeviceManager();
             uint length = 0;
@@ -216,7 +216,7 @@ namespace WpdMtpLib
         /// デバイス製造元を取得する
         /// </summary>
         /// <param name="deviceId">デバイスID</param>
-        public string GetDeviceManufacturer(string deviceId)
+        public virtual string GetDeviceManufacturer(string deviceId)
         {
             PortableDeviceManager manager = new PortableDeviceManager();
             uint length = 0;
@@ -246,7 +246,7 @@ namespace WpdMtpLib
         /// デバイス説明を取得する
         /// </summary>
         /// <param name="deviceId">デバイスID</param>
-        public string GetDeviceDescription(string deviceId)
+        public virtual string GetDeviceDescription(string deviceId)
         {
             PortableDeviceManager manager = new PortableDeviceManager();
             uint length = 0;
@@ -276,7 +276,7 @@ namespace WpdMtpLib
         /// デバイスに接続する
         /// </summary>
         /// <param name="deviceId">デバイスID</param>
-        public void Open(string deviceId)
+        public virtual void Open(string deviceId)
         {
             if (device != null) { return; }
 
@@ -301,7 +301,7 @@ namespace WpdMtpLib
         /// <summary>
         /// デバイスを切断する
         /// </summary>
-        public void Close()
+        public virtual void Close()
         {
             if (device == null) { return; }
             device.Unadvise(eventCookie);
@@ -320,7 +320,7 @@ namespace WpdMtpLib
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        public MtpResponse Execute(MtpOperationCode code, uint[] param, byte[] data = null)
+        public virtual MtpResponse Execute(MtpOperationCode code, uint[] param, byte[] data = null)
         {
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
@@ -344,7 +344,7 @@ namespace WpdMtpLib
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        public MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null)
+        public virtual MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null)
         {
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
