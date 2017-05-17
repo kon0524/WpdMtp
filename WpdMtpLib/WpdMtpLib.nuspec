@@ -2,17 +2,16 @@
 <package >
   <metadata>
     <id>WpdMtpLib</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title></title>
     <authors>soundkonchan</authors>
     <owners>soundkonchan,toshi3221,ntth</owners>
     <licenseUrl>https://github.com/kon0524/WpdMtp/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/kon0524/WpdMtp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>It is a library for manipulating MTP devices from C #.
-    When installing with Nuget, lib\Interop.PortableDeviceApiLib.dll file is created, but it is unnecessary.</description>
+    <description>It is a library for manipulating MTP devices from C #.</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright ©  2016</copyright>
+    <copyright>© 2016 Kohta Kon</copyright>
     <tags></tags>
   </metadata>
 </package>
