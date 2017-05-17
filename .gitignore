@@ -5,3 +5,4 @@ WpdMtpLib.pdb
 /Test/bin
 /Test/obj
 *.suo
+packages/
