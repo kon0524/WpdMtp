@@ -1,6 +1,8 @@
 /WpdMtpLib/obj
 /WpdMtpLib/bin
+/WpdMtpLib/*.nupkg
 WpdMtpLib.pdb
 /Test/bin
 /Test/obj
 *.suo
+packages/
