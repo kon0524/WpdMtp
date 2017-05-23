@@ -1,4 +1,7 @@
 # WpdMtp
+
+[![Nuget](https://img.shields.io/nuget/vpre/WpdMtpLib.svg)](https://www.nuget.org/packages/WpdMtpLib/)
+
 C#からMTPデバイスを操作するためのライブラリです。  
 RICOH THETA Sなどのカメラを操作することができます。  
 
