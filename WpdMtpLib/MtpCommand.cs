@@ -103,7 +103,7 @@ namespace WpdMtpLib
         /// デバイスの接続状況
         /// </summary>
         /// <returns></returns>
-        public bool IsOpened()
+        public virtual bool IsOpened()
         {
             return device != null;
         }
