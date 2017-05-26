@@ -53,9 +53,9 @@ namespace WpdMtpLib
         /// <returns></returns>
         public static byte[] EncodePtpString(string str)
         {
-            byte[] retVal = new byte[str.Length * 2 + 2];
+            byte[] retVal = new byte[(str.Length + 1) * 2 + 1];
             byte[] temp = Encoding.Unicode.GetBytes(str);
-            retVal[0] = (byte)str.Length;
+            retVal[0] = (byte)(str.Length + 1);
             Array.Copy(temp, 0, retVal, 1, temp.Length);
 
             return retVal;
