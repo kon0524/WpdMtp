@@ -219,6 +219,7 @@ namespace WpdMtpLib
                 bufferOut = new byte[size];
                 Marshal.Copy(dataPtr, bufferOut, 0, bufferOut.Length);
                 Marshal.ReleaseComObject(spResults);
+                Marshal.FreeCoTaskMem(dataPtr);
             }
 
             // DataEndTransfer(レスポンス)を送信する
