@@ -1,0 +1,19 @@
+version: '{build}'
+branches:
+  only:
+  - /master/
+configuration: Release
+platform: Any CPU
+build:
+  publish_nuget: true
+  verbosity: minimal
+test: off
+artifacts:
+- path: WpdMtpLib\bin\Release\WpdMtpLib.dll
+  name: Lib
+- path: Test\bin\Release\Test.exe
+  name: Lib
+deploy:
+- provider: NuGet
+  api_key:
+    secure: pIC+f3Aj3RDVsroLrP335S2AYhqtTP5yAf8Jdk3KtgeCIYym3kr0gcsjYuHUrvCa
