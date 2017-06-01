@@ -12,6 +12,6 @@
     <description>It is a library for manipulating MTP devices from C #.</description>
     <releaseNotes></releaseNotes>
     <copyright>© 2016 Kohta Kon</copyright>
-    <tags></tags>
+    <tags>MTP Windows Portable Devices WPD .NET C#</tags>
   </metadata>
 </package>
