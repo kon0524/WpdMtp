@@ -322,17 +322,20 @@ namespace WpdMtpLib
         /// <returns></returns>
         public virtual MtpResponse Execute(MtpOperationCode code, uint[] param, byte[] data = null)
         {
-            if (!IsOpened())
-            {
-                Debug.WriteLine("[WpdCommand.Execute] device is null.");
-                return new MtpResponse((ushort)MtpResponseCode.Error, param, data);
-            }
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
             MtpResponse res;
             try
             {
-                res = MtpOperation.ExecuteCommand(device, code, param, data);
+                if (IsOpened())
+                {
+                    res = MtpOperation.ExecuteCommand(device, code, param, data);
+                }
+                else
+                {
+                    Debug.WriteLine("[WpdCommand.Execute] device is null.");
+                    res = new MtpResponse((ushort)MtpResponseCode.Error, param, data);
+                }
             }
             catch (COMException e)
             {
@@ -354,17 +357,20 @@ namespace WpdMtpLib
         /// <returns></returns>
         public virtual MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null)
         {
-            if (!IsOpened())
-            {
-                Debug.WriteLine("[WpdCommand.Execute] device is null.");
-                return new MtpResponse((ushort)MtpResponseCode.Error, param, data);
-            }
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
             MtpResponse res;
             try
             {
-                res = MtpOperation.ExecuteCommand(device, code, dataPhase, param, data);
+                if (IsOpened())
+                {
+                    res = MtpOperation.ExecuteCommand(device, code, dataPhase, param, data);
+                }
+                else
+                {
+                    Debug.WriteLine("[WpdCommand.Execute] device is null.");
+                    res = new MtpResponse((ushort)MtpResponseCode.Error, param, data);
+                }
             }
             catch (COMException e)
             {
