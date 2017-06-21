@@ -11,6 +11,12 @@ namespace WpdMtpLib.DeviceProperty
         /// <summary>
         /// シャッター速度
         /// </summary>
+        public static ulong SS_1_24000 = 0x00005DC000000001; // 1/24000
+        public static ulong SS_1_20000 = 0x00004E2000000001; // 1/20000
+        public static ulong SS_1_16000 = 0x00003E8000000001; // 1/16000
+        public static ulong SS_1_12800 = 0x0000320000000001; // 1/12800
+        public static ulong SS_1_12000 = 0x00002EE000000001; // 1/12000
+        public static ulong SS_1_10000 = 0x0000271000000001; // 1/10000
         public static ulong SS_1_8000 = 0x00001F4000000001; // 1/8000
         public static ulong SS_1_6400 = 0x0000190000000001; // 1/6400
         public static ulong SS_1_6000 = 0x0000177000000001; // 1/6000
