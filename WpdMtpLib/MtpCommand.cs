@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -48,6 +49,7 @@ namespace WpdMtpLib
         /// MTP排他制御用セマフォ
         /// </summary>
         private Semaphore sem = null;
+        private string existSemaphoreName = string.Empty; 
 
         /// <summary>
         /// コンストラクタ
@@ -66,6 +68,7 @@ namespace WpdMtpLib
             {
                 sem.Close();
                 sem = null;
+                existSemaphoreName = string.Empty;
             }
         }
 
@@ -276,15 +279,22 @@ namespace WpdMtpLib
         /// デバイスに接続する
         /// </summary>
         /// <param name="deviceId">デバイスID</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public virtual void Open(string deviceId)
         {
             if (device != null) { return; }
 
             // 排他制御用のセマフォを生成する
+            var semName = Regex.Replace("WpdMtpSem" + deviceId, "[^0-9a-zA-Z]", "", RegexOptions.Singleline);
             if (sem == null)
             {
-                var semName = Regex.Replace("WpdMtpSem" + deviceId, "[^0-9a-zA-Z]", "", RegexOptions.Singleline);
                 sem = new Semaphore(1, 1, semName);
+            }
+            else if (!existSemaphoreName.Equals(semName))
+            {
+                var tempsem = sem;
+                sem = new Semaphore(1, 1, semName);
+                tempsem.Close();
             }
 
             device = new PortableDevice();
@@ -301,17 +311,19 @@ namespace WpdMtpLib
         /// <summary>
         /// デバイスを切断する
         /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public virtual void Close()
         {
             if (device == null) { return; }
-            device.Unadvise(eventCookie);
-            device.Close();
-            Marshal.ReleaseComObject(device);
-            device = null;
-
-            // 排他制御用セマフォを解放する
-            sem.Close();
-            sem = null;
+            sem.WaitOne();
+            if (device != null)
+            {
+                device.Unadvise(eventCookie);
+                device.Close();
+                Marshal.ReleaseComObject(device);
+                device = null;
+            }
+            sem.Release();
         }
 
         /// <summary>
@@ -320,6 +332,7 @@ namespace WpdMtpLib
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public virtual MtpResponse Execute(MtpOperationCode code, uint[] param, byte[] data = null)
         {
             if (param == null) { param = new uint[5]; }
@@ -355,6 +368,7 @@ namespace WpdMtpLib
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public virtual MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null)
         {
             if (param == null) { param = new uint[5]; }
