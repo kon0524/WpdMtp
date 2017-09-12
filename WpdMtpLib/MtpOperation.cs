@@ -211,9 +211,9 @@ namespace WpdMtpLib
                     return new MtpResponse(0, null, null);
                 }
                 // 受信データのアドレスを取得する
-                dataAddress = Marshal.AllocCoTaskMem(4);
+                dataAddress = Environment.Is64BitProcess ? Marshal.AllocCoTaskMem(8) : Marshal.AllocCoTaskMem(4);
                 spResults.GetBufferValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_TRANSFER_DATA, dataAddress, out readedSize);
-                dataPtr = new IntPtr(Marshal.ReadInt32(dataAddress));
+                dataPtr = Environment.Is64BitProcess ? new IntPtr(Marshal.ReadInt64(dataAddress)) : new IntPtr(Marshal.ReadInt32(dataAddress));
                 Marshal.FreeCoTaskMem(dataAddress);
                 // 受信データを取得する
                 bufferOut = new byte[size];
