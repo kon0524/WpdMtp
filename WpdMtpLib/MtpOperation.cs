@@ -124,8 +124,7 @@ namespace WpdMtpLib
             responseParam = null;
             if (responseCode == 0x2001)
             {
-                IPortableDevicePropVariantCollection resultValues
-                    = (IPortableDevicePropVariantCollection)new PortableDeviceTypesLib.PortableDevicePropVariantCollection();
+                IPortableDevicePropVariantCollection resultValues;
                 spResults.GetIPortableDevicePropVariantCollectionValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_RESPONSE_PARAMS, out resultValues);
 
                 uint count = 1;
@@ -333,8 +332,7 @@ namespace WpdMtpLib
             responseParam = null;
             if (responseCode == 0x2001)
             {
-                IPortableDevicePropVariantCollection resultValues
-                    = (IPortableDevicePropVariantCollection)new PortableDeviceTypesLib.PortableDevicePropVariantCollection();
+                IPortableDevicePropVariantCollection resultValues;
                 spResults.GetIPortableDevicePropVariantCollectionValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_RESPONSE_PARAMS, out resultValues);
 
                 uint count = 1;
@@ -393,7 +391,7 @@ namespace WpdMtpLib
         /// <returns></returns>
         private static tag_inner_PROPVARIANT createPropVariant(uint value)
         {
-            tag_inner_PROPVARIANT propVariant = new tag_inner_PROPVARIANT();
+            tag_inner_PROPVARIANT propVariant;
 
             IPortableDeviceValues pdValues = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             pdValues.SetUnsignedIntegerValue(ref WpdProperty.WPD_OBJECT_ID, value);
