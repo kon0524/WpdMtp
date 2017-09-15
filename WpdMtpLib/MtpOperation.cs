@@ -2,6 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace WpdMtpLib
 {
@@ -10,6 +11,19 @@ namespace WpdMtpLib
     /// </summary>
     internal static class MtpOperation
     {
+        [StructLayout(LayoutKind.Explicit, Size = 16)]
+        public struct PropVariant
+        {
+            [FieldOffset(0)]
+            public short variantType;
+            [FieldOffset(8)]
+            public IntPtr pointerValue;
+            [FieldOffset(8)]
+            public byte byteValue;
+            [FieldOffset(8)]
+            public long longValue;
+        }
+
         /// <summary>
         /// MtpOperationCodeとDataPhaseの一覧
         /// </summary>
@@ -391,14 +405,16 @@ namespace WpdMtpLib
         /// <returns></returns>
         private static tag_inner_PROPVARIANT createPropVariant(uint value)
         {
-            tag_inner_PROPVARIANT propVariant;
+            PropVariant pvValue = new PropVariant();
+            pvValue.variantType = 19; // UInt32
+            pvValue.longValue = (long)value;
 
-            IPortableDeviceValues pdValues = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
-            pdValues.SetUnsignedIntegerValue(ref WpdProperty.WPD_OBJECT_ID, value);
-            pdValues.GetValue(ref WpdProperty.WPD_OBJECT_ID, out propVariant);
-            Marshal.ReleaseComObject(pdValues);
+            IntPtr ptrValue = Marshal.AllocHGlobal(Marshal.SizeOf(pvValue));
+            Marshal.StructureToPtr(pvValue, ptrValue, false);
 
-            return propVariant;
+            tag_inner_PROPVARIANT ipValue = (tag_inner_PROPVARIANT)Marshal.PtrToStructure(ptrValue, typeof(tag_inner_PROPVARIANT));
+            Marshal.FreeHGlobal(ptrValue);
+            return ipValue;
         }
 
         /// <summary>
