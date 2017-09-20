@@ -59,21 +59,21 @@ namespace WpdMtpLib
         /// </summary>
         /// <param name="device"></param>
         /// <returns></returns>
-        internal static MtpResponse ExecuteCommand(PortableDevice device, MtpOperationCode code, uint[] param, byte[] sendData)
+        internal static MtpResponse ExecuteCommand(PortableDevice device, MtpOperationCode code, uint[] param, byte[] sendData, bool noReadResponseParam)
         {
             DataPhase dataPhaseInfo = OperationCode2DataPhase[code];
 
             if (dataPhaseInfo == DataPhase.NoDataPhase)
             {
-                return executeNoDataCommand(device, (ushort)code, param);
+                return executeNoDataCommand(device, (ushort)code, param, noReadResponseParam);
             }
             else if (dataPhaseInfo == DataPhase.DataReadPhase)
             {
-                return executeDataReadCommand(device, (ushort)code, param);
+                return executeDataReadCommand(device, (ushort)code, param, noReadResponseParam);
             }
             else
             {
-                return executeDataWriteCommand(device, (ushort)code, param, sendData);
+                return executeDataWriteCommand(device, (ushort)code, param, sendData, noReadResponseParam);
             }
         }
 
@@ -82,19 +82,19 @@ namespace WpdMtpLib
         /// </summary>
         /// <param name="device"></param>
         /// <returns></returns>
-        internal static MtpResponse ExecuteCommand(PortableDevice device, ushort code, DataPhase dataPhase, uint[] param, byte[] sendData)
+        internal static MtpResponse ExecuteCommand(PortableDevice device, ushort code, DataPhase dataPhase, uint[] param, byte[] sendData, bool noReadResponseParam)
         {
             if (dataPhase == DataPhase.NoDataPhase)
             {
-                return executeNoDataCommand(device, code, param);
+                return executeNoDataCommand(device, code, param, noReadResponseParam);
             }
             else if (dataPhase == DataPhase.DataReadPhase)
             {
-                return executeDataReadCommand(device, code, param);
+                return executeDataReadCommand(device, code, param, noReadResponseParam);
             }
             else
             {
-                return executeDataWriteCommand(device, code, param, sendData);
+                return executeDataWriteCommand(device, code, param, sendData, noReadResponseParam);
             }
         }
 
@@ -105,7 +105,7 @@ namespace WpdMtpLib
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        private static MtpResponse executeNoDataCommand(PortableDevice device, ushort code, uint[] param)
+        private static MtpResponse executeNoDataCommand(PortableDevice device, ushort code, uint[] param, bool noReadResponseParam)
         {
             IPortableDeviceValues spResults;
             int ret;
@@ -136,7 +136,7 @@ namespace WpdMtpLib
             spResults.GetUnsignedIntegerValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_RESPONSE_CODE, out responseCode);
             // レスポンスパラメータを取得する
             responseParam = null;
-            if (responseCode == 0x2001)
+            if (responseCode == 0x2001 && !noReadResponseParam)
             {
                 IPortableDevicePropVariantCollection resultValues;
                 spResults.GetIPortableDevicePropVariantCollectionValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_RESPONSE_PARAMS, out resultValues);
@@ -164,7 +164,7 @@ namespace WpdMtpLib
         /// <param name="code"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        private static MtpResponse executeDataReadCommand(PortableDevice device, ushort code, uint[] param)
+        private static MtpResponse executeDataReadCommand(PortableDevice device, ushort code, uint[] param, bool noReadResponseParam)
         {
             IPortableDeviceValues spResults;
             int ret;
@@ -236,7 +236,7 @@ namespace WpdMtpLib
             }
 
             // DataEndTransfer(レスポンス)を送信する
-            sendEndDataTransfer(device, context, out responseCode, out responseParam);
+            sendEndDataTransfer(device, context, out responseCode, out responseParam, noReadResponseParam);
 
             return new MtpResponse((ushort)responseCode, responseParam, bufferOut);
         }
@@ -249,7 +249,7 @@ namespace WpdMtpLib
         /// <param name="param"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private static MtpResponse executeDataWriteCommand(PortableDevice device, ushort code, uint[] param, byte[] data)
+        private static MtpResponse executeDataWriteCommand(PortableDevice device, ushort code, uint[] param, byte[] data, bool noReadResponseParam)
         {
             int ret = 1;
             string context;
@@ -307,7 +307,7 @@ namespace WpdMtpLib
             Marshal.ReleaseComObject(spResults);
 
             // DataEndTransfer(レスポンス)を送信する
-            sendEndDataTransfer(device, context, out responseCode, out responseParam);
+            sendEndDataTransfer(device, context, out responseCode, out responseParam, noReadResponseParam);
 
             return new MtpResponse((ushort)responseCode, responseParam, null);
         }
@@ -318,7 +318,7 @@ namespace WpdMtpLib
         /// <param name="device"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        private static void sendEndDataTransfer(PortableDevice device, string context, out uint responseCode, out uint[] responseParam)
+        private static void sendEndDataTransfer(PortableDevice device, string context, out uint responseCode, out uint[] responseParam, bool noReadResponseParam)
         {
             IPortableDeviceValues mtpEndDataTransfer = (IPortableDeviceValues)new PortableDeviceTypesLib.PortableDeviceValues();
             mtpEndDataTransfer.SetGuidValue(ref WpdProperty.WPD_PROPERTY_COMMON_COMMAND_CATEGORY, ref WpdProperty.WPD_COMMAND_MTP_EXT_END_DATA_TRANSFER.fmtid);
@@ -344,7 +344,7 @@ namespace WpdMtpLib
 
             // パラメータ
             responseParam = null;
-            if (responseCode == 0x2001)
+            if (responseCode == 0x2001 && !noReadResponseParam)
             {
                 IPortableDevicePropVariantCollection resultValues;
                 spResults.GetIPortableDevicePropVariantCollectionValue(ref WpdProperty.WPD_PROPERTY_MTP_EXT_RESPONSE_PARAMS, out resultValues);

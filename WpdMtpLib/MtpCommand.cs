@@ -333,7 +333,7 @@ namespace WpdMtpLib
         /// <param name="param"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public virtual MtpResponse Execute(MtpOperationCode code, uint[] param, byte[] data = null)
+        public virtual MtpResponse Execute(MtpOperationCode code, uint[] param, byte[] data = null, bool noReadResponseParam = false)
         {
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
@@ -342,7 +342,7 @@ namespace WpdMtpLib
             {
                 if (IsOpened())
                 {
-                    res = MtpOperation.ExecuteCommand(device, code, param, data);
+                    res = MtpOperation.ExecuteCommand(device, code, param, data, noReadResponseParam);
                 }
                 else
                 {
@@ -369,7 +369,7 @@ namespace WpdMtpLib
         /// <param name="param"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public virtual MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null)
+        public virtual MtpResponse Execute(ushort code, DataPhase dataPhase, uint[] param, byte[] data = null, bool noReadResponseParam = false)
         {
             if (param == null) { param = new uint[5]; }
             sem.WaitOne();
@@ -378,7 +378,7 @@ namespace WpdMtpLib
             {
                 if (IsOpened())
                 {
-                    res = MtpOperation.ExecuteCommand(device, code, dataPhase, param, data);
+                    res = MtpOperation.ExecuteCommand(device, code, dataPhase, param, data, noReadResponseParam);
                 }
                 else
                 {
